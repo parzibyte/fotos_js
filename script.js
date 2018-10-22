@@ -21,7 +21,7 @@ const $video = document.querySelector("#video"),
 // La función que es llamada después de que ya se dieron los permisos
 // Lo que hace es llenar el select con los dispositivos obtenidos
 const llenarSelectConDispositivosDisponibles = () => {
-	
+
 	navigator
 		.mediaDevices
 		.enumerateDevices()
@@ -124,25 +124,29 @@ const llenarSelectConDispositivosDisponibles = () => {
 					$video.pause();
 
 					//Obtener contexto del canvas y dibujar sobre él
-					var contexto = $canvas.getContext("2d");
+					let contexto = $canvas.getContext("2d");
 					$canvas.width = $video.videoWidth;
 					$canvas.height = $video.videoHeight;
 					contexto.drawImage($video, 0, 0, $canvas.width, $canvas.height);
 
-					var foto = $canvas.toDataURL(); //Esta es la foto, en base 64
+					let foto = $canvas.toDataURL(); //Esta es la foto, en base 64
 					$estado.innerHTML = "Enviando foto. Por favor, espera...";
-					var xhr = new XMLHttpRequest();
-					xhr.open("POST", "./guardar_foto.php", true);
-					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					xhr.send(encodeURIComponent(foto)); //Codificar y enviar
-
-					xhr.onreadystatechange = function () {
-						if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-							console.log("La foto fue enviada correctamente");
-							console.log(xhr);
-							$estado.innerHTML = "Foto guardada con éxito. Puedes verla <a target='_blank' href='./" + xhr.responseText + "'> aquí</a>";
+					fetch("./guardar_foto.php", {
+						method: "POST",
+						body: encodeURIComponent(foto),
+						headers: {
+							"Content-type": "application/x-www-form-urlencoded",
 						}
-					}
+					})
+						.then(resultado => {
+							// A los datos los decodificamos como texto plano
+							return resultado.text()
+						})
+						.then(nombreDeLaFoto => {
+							// nombreDeLaFoto trae el nombre de la imagen que le dio PHP
+							console.log("La foto fue enviada correctamente");
+							$estado.innerHTML = `Foto guardada con éxito. Puedes verla <a target='_blank' href='./${nombreDeLaFoto}'> aquí</a>`;
+						})
 
 					//Reanudar reproducción
 					$video.play();
