@@ -30,5 +30,7 @@ Si quieres, puedes ver los posts en donde explico cómo es que funciona todo est
 # Probar en línea
   
 Si gustas, puedes probar este proyecto en este link:
-https://cgfyemliexrl.byethost3.com/fotos_js
+
+https://tomar-foto--parzibyte.repl.co/
+
 Tranquilo, no es inseguro. Agrega una excepción y continúa; **si quieres cubre tu cámara**; o descarga el código y alójalo en localhost o en un servidor con HTTPS.
